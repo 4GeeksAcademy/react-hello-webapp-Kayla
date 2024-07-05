@@ -1,45 +1,71 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
+			contacts: [],
+		  },
+		  actions: {
+			getContacts: async () => {
+			  const response = await fetch(
+				"https://playground.4geeks.com/contact/agendas/Kaylabree"
+			  );
+			  const data = await response.json();
+			  setStore({ contacts: data });
+			},
+			addContact: async (name, phone, email, address) => {
+			  const store = getStore();
+			  const response = await fetch(
+				"https://playground.4geeks.com/contact/agendas/Kaylabree/contacts",
 				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
+				  method: "POST",
+				  headers: { "Content-Type": "application/json" },
+				  body: JSON.stringify({
+					full_name: name,
+					phone: phone,
+					email: email,
+					address: address,
+					agenda_slug: "Kaylabree",
+				  }),
 				}
-			]
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			  );
+			  const data = await response.json();
+			  setStore({ contacts: [...store.contacts, data] });
 			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
+			deleteContact: async (id) => {
+			  const store = getStore();
+			  await fetch(
+				"https://playground.4geeks.com/contact/agendas/Kaylabree/contacts/" + id,
+				{
+				  method: "DELETE",
+				  headers: { "Content-Type": "application/json" },
+				}
+			  );
+			  setStore({
+				contacts: store.contacts.filter((contact) => contact.id !== id),
+			  });
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			}
-		}
-	};
-};
-
-export default getState;
+			editContact: async (id, name, phone, email, address) => {
+			  const store = getStore();
+			  const response = await fetch(
+				"https://playground.4geeks.com/contact/agendas/Kaylabree/contacts/" + id,
+				{
+				  method: "PUT",
+				  headers: { "Content-Type": "application/json" },
+				  body: JSON.stringify({
+					full_name: name,
+					phone: phone,
+					email: email,
+					address: address,
+					agenda_slug: "Kaylabree",
+				  }),
+				}
+			  );
+			  const data = await response.json();
+			  setStore({ contacts: store.contacts.map(contact => contact.id === id ? data : contact) });
+			},
+		  },
+		};
+	  };
+	  
+	  export default getState;
+	  
+	
