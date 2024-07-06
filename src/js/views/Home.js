@@ -27,6 +27,8 @@ export const Home = () => {
   };
 
   const handleInputChange = (e) => {
+    console.log (e.target.name)
+    console.log (e.target.value)
     setNewContact({ ...newContact, [e.target.name]: e.target.value });
   };
 

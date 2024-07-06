@@ -18,13 +18,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				{
 				  method: "POST",
 				  headers: { "Content-Type": "application/json" },
-				  body: JSON.stringify({
-					full_name: name,
-					phone: phone,
-					email: email,
-					address: address,
-					agenda_slug: "Kaylabree",
-				  }),
+				  body: JSON.stringify(contactData), 
+				  
+				  //({
+					//full_name: name,
+					//phone: phone,
+					//email: email,
+					//address: address,
+					//agenda_slug: "Kaylabree",
+				 // }),
 				}
 			  );
 			  const data = await response.json();
